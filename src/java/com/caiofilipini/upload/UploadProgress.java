@@ -14,7 +14,7 @@ public class UploadProgress {
 		this(total, 0L);
 	}
 
-	public void completedMore(Long increment) {
+	public void completedMore(Integer increment) {
 		this.completed += increment;
 	}
 	

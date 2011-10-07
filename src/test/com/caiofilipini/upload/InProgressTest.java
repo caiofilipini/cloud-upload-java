@@ -6,9 +6,9 @@ import static org.junit.Assert.assertEquals;
 public class InProgressTest {
 
 	@Test
-	public void shouldStoreProgressInformation() {
+	public void shouldStoreInitialProgressInformation() {
 		String uid = String.valueOf(System.currentTimeMillis());
-		UploadProgress progress = new UploadProgress(1024L, 0L);
+		UploadProgress progress = new UploadProgress(1024L);
 		
 		InProgress.store(uid, progress);
 		assertEquals(progress, InProgress.now(uid));

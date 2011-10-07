@@ -16,7 +16,7 @@ public class UploadProgressTest {
 	@Test
 	public void shouldUpdateCompleted() {
 		UploadProgress progress = new UploadProgress(2048L);
-		progress.completedMore(205L);
+		progress.completedMore(205);
 		
 		Integer expectedPercentage = 10;
 		assertEquals(expectedPercentage, progress.calculatePercentage());
