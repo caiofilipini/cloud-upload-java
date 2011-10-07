@@ -16,23 +16,23 @@ public class StatusHandler extends HttpServlet {
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		String uid = request.getParameter("uid");
-		
-		if (uid != null && !uid.isEmpty()) {
-			UploadProgress progress = InProgress.now(uid);
-			
-			if (progress == null) {
-				respond404(response);
-				return;
-			}
-
-			Integer percentage = progress.calculatePercentage();
-			response.setHeader("Content-Type", "application/json");
-			response.setStatus(HttpServletResponse.SC_OK);
-			response.getWriter().write("{\"completed\" : \"" + percentage + "\"}");
-		} else {
+		try {
+			String uid = request.getParameter("uid");
+			respond200WithJson(response, uid);
+		} catch (ProgressNotFoundException e) {
 			respond404(response);
 		}
+	}
+
+	private void respond200WithJson(HttpServletResponse response, String uid) throws IOException {
+		response.setHeader("Content-Type", "application/json");
+		response.setStatus(HttpServletResponse.SC_OK);
+		response.getWriter().write(progressAsJson(uid));
+	}
+
+	private String progressAsJson(String uid) {
+		UploadProgress progress = InProgress.now(uid);
+		return "{\"completed\" : \"" + progress.calculatePercentage() + "\"}";
 	}
 
 	private void respond404(HttpServletResponse response) throws IOException {

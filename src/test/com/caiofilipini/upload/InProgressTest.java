@@ -14,4 +14,24 @@ public class InProgressTest {
 		assertEquals(progress, InProgress.now(uid));
 	}
 
+	@Test(expected = ProgressNotFoundException.class)
+	public void shouldThrowExceptionWhenNoProgressIsFoundForUid() {
+		InProgress.now("42");
+	}
+
+	@Test(expected = ProgressNotFoundException.class)
+	public void shouldThrowExceptionWhenUidIsNull() {
+		InProgress.now(null);
+	}
+
+	@Test(expected = ProgressNotFoundException.class)
+	public void shouldThrowExceptionWhenUidIsEmpty() {
+		InProgress.now("");
+	}
+
+	@Test(expected = ProgressNotFoundException.class)
+	public void shouldThrowExceptionWhenUidContainsWhitespacesOnly() {
+		InProgress.now("   ");
+	}
+
 }
