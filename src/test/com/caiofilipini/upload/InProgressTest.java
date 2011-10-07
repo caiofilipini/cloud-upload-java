@@ -10,7 +10,7 @@ public class InProgressTest {
 		String uid = String.valueOf(System.currentTimeMillis());
 		UploadProgress progress = new UploadProgress(1024L, 0L);
 		
-		InProgress.start(uid, progress);
+		InProgress.store(uid, progress);
 		assertEquals(progress, InProgress.now(uid));
 	}
 

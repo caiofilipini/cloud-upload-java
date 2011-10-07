@@ -47,7 +47,7 @@ public class StatusHandlerTest {
 	@Test
 	public void shouldRespond200WithPercentageAsJsonWhenUploadProgressIsAvailableForUid() throws Exception {
 		String uid = String.valueOf(System.currentTimeMillis());
-		InProgress.start(uid, new UploadProgress(1024L, 102L));
+		InProgress.store(uid, new UploadProgress(1024L, 102L));
 		when(request.getParameter("uid")).thenReturn(uid);
 
 		statusHandler.doGet(request, response);

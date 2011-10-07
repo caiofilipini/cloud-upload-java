@@ -11,7 +11,7 @@ public class InProgress {
 		return IN_PROGRESS.get(uid);
 	}
 	
-	public static void start(String uid, UploadProgress progress) {
+	public static void store(String uid, UploadProgress progress) {
 		IN_PROGRESS.put(uid, progress);
 	}
 
