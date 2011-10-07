@@ -19,11 +19,7 @@ public class UploadProgress {
 	}
 	
 	public Integer calculatePercentage() {
-		int percentage = (int) Math.round(completed.doubleValue() / total.doubleValue() * 100.0);
-		// This may seem a little awkward, but since total size
-		// is based in the Content-Length header (which includes other POST data),
-		// it is necessary.
-		return percentage > 100 ? 100 : percentage;
+		return (int) Math.round(completed.doubleValue() / total.doubleValue() * 100.0);
 	}
 	
 	@Override

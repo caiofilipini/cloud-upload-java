@@ -35,16 +35,6 @@ public class UploadProgressTest {
 		Integer expectedPercentage = 11;
 		assertEquals(expectedPercentage, progress.calculatePercentage());
 	}
-	
-	@Test
-	public void shouldReturn100EvenIfPercentageIsGreater() {
-		// This may seem a little awkward, but since total size
-		// is based in the Content-Length header (which may include other POST data),
-		// it is necessary.
-		UploadProgress progress = new UploadProgress(42L, 44L);
-		Integer expectedPercentage = 100;
-		assertEquals(expectedPercentage, progress.calculatePercentage());
-	}
 
 	@Test
 	public void defineEquals() {
