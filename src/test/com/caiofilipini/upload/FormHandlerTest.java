@@ -16,30 +16,30 @@ import org.junit.Test;
 
 public class FormHandlerTest {
 
-	private HttpServletResponse response;
-	private HttpServletRequest request;
-	private FormHandler formHandler;
+    private HttpServletResponse response;
+    private HttpServletRequest request;
+    private FormHandler formHandler;
 
-	@Before
-	public void createSubject() {
-		formHandler = new FormHandler();
-	}
-	
-	@Before
-	public void createRequestAndResponse() {
-		RequestDispatcher dispatcher = mock(RequestDispatcher.class);
-		response = mock(HttpServletResponse.class);
-		request = mock(HttpServletRequest.class);
-		when(request.getRequestDispatcher(anyString())).thenReturn(dispatcher);
-	}
+    @Before
+    public void createSubject() {
+        formHandler = new FormHandler();
+    }
 
-	@Test
-	public void shouldGenerateUidAndForwardToForm() throws Exception {
-		formHandler.doGet(request, response);
-		
-		verify(request).setAttribute(eq("uid"), isNotNull());
-		verify(response).setHeader("Content-Type", "text/html");
-		verify(request).getRequestDispatcher("WEB-INF/jsp/uploadForm.jsp");
-	}
+    @Before
+    public void createRequestAndResponse() {
+        RequestDispatcher dispatcher = mock(RequestDispatcher.class);
+        response = mock(HttpServletResponse.class);
+        request = mock(HttpServletRequest.class);
+        when(request.getRequestDispatcher(anyString())).thenReturn(dispatcher);
+    }
+
+    @Test
+    public void shouldGenerateUidAndForwardToForm() throws Exception {
+        formHandler.doGet(request, response);
+
+        verify(request).setAttribute(eq("uid"), isNotNull());
+        verify(response).setHeader("Content-Type", "text/html");
+        verify(request).getRequestDispatcher("WEB-INF/jsp/uploadForm.jsp");
+    }
 
 }

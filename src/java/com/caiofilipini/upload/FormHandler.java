@@ -11,17 +11,17 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name="FormHandler", urlPatterns="/form")
 public class FormHandler extends HttpServlet {
 
-	private static final long serialVersionUID = 1L;
-	
-	@Override
-	public void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		long uid = System.currentTimeMillis();
-		
-		request.setAttribute("uid", uid);
-		response.setHeader("Content-Type", "text/html");
-		
-		request.getRequestDispatcher("WEB-INF/jsp/uploadForm.jsp").forward(request, response);
-	}
+    private static final long serialVersionUID = 1L;
+
+    @Override
+    public void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        long uid = System.currentTimeMillis();
+
+        request.setAttribute("uid", uid);
+        response.setHeader("Content-Type", "text/html");
+
+        request.getRequestDispatcher("WEB-INF/jsp/uploadForm.jsp").forward(request, response);
+    }
 
 }
