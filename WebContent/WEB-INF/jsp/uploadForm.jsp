@@ -15,7 +15,7 @@
         <iframe id="uploadContainer" name="uploadContainer" style="display: none; visibility: hidden; border: 0;"></iframe>
       </div>
 
-      <div id="progress" style="display: none;">
+      <div id="progress" style="visibility: hidden;">
         Uploaded: <span id="status">0%</span>
       </div>
 

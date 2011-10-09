@@ -1,9 +1,9 @@
 var UserInterface = {
-  hideFileSelection: function() {
-    $("#fileSelection").hide();
+  disableFileSelection: function() {
+    $("#fileToUpload").attr("disabled", "disabled");
   },
   showStatusBar: function() {
-    $("#progress").show();
+    $("#progress").css("visibility", "visible");
   },
   updateStatusTo: function(percentage) {
     $("#status").html(percentage + "%");
@@ -57,7 +57,7 @@ var Uploader = {
     };
 
     $("#uploadForm").submit();
-    ui.hideFileSelection();
+    ui.disableFileSelection();
     ui.showStatusBar();
 
     checkProgress();
