@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -88,7 +90,8 @@ public class UploadHandler extends HttpServlet {
         FileOutputStream diskFile = null;
         InputStream uploadStream = null;
 
-        String newFilePath = FILES_PATH + File.separator + uid;
+        String extension = extractExtensionFrom(stream.getName());
+        String newFilePath = FILES_PATH + File.separator + uid + extension;
         String webappDiskPath = request.getServletContext().getRealPath(".");
 
         long start = System.currentTimeMillis();
@@ -119,7 +122,20 @@ public class UploadHandler extends HttpServlet {
         System.out.println("Finished writing " + newFilePath + " in " + (end - start) + "ms.");
     }
 
-    private ServletFileUpload getFileUpload() {
+    private String extractExtensionFrom(String name) {
+        Pattern fileExtensionRegex = Pattern.compile("(\\.\\w+)$");
+        Matcher fileExtensionMatcher = fileExtensionRegex.matcher(name);
+        String extension = "";
+
+        if (fileExtensionMatcher.find()) {
+            extension = fileExtensionMatcher.group();
+        }
+
+        return extension;
+	}
+
+	private ServletFileUpload getFileUpload() {
         return this.fileUpload != null ? this.fileUpload : new ServletFileUpload();
     }
+
 }

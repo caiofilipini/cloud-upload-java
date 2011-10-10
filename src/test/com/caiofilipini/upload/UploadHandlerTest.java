@@ -55,18 +55,18 @@ public class UploadHandlerTest {
     public void shouldReadUploadedFileFromMultipartRequestAndWriteNewFileToDisk() throws Exception {
         String uid = String.valueOf(System.currentTimeMillis());
         String uploadContents = "SOMERANDOMFILECONTENT";
-        setupMultiPartRequest(uid, uploadContents, uploadContents.length());
+        setupMultiPartRequest("randomfile.txt", uid, uploadContents, uploadContents.length());
 
         uploadHandler.doPost(request, response);
 
-        assertEquals(uploadContents, new BufferedReader(new FileReader("/tmp/files/" + uid)).readLine());
+        assertEquals(uploadContents, new BufferedReader(new FileReader("/tmp/files/" + uid + ".txt")).readLine());
     }
 
     @Test
     public void shouldUpdateProgressTo100WhenFileUploadIsComplete() throws Exception {
         String uid = String.valueOf(System.currentTimeMillis());
         String uploadContents = "This file is really tiny, but it's ok.";
-        setupMultiPartRequest(uid, uploadContents, uploadContents.length());
+        setupMultiPartRequest("tinyfile.txt", uid, uploadContents, uploadContents.length());
 
         uploadHandler.doPost(request, response);
         UploadProgress progress = InProgress.now(uid);
@@ -79,7 +79,7 @@ public class UploadHandlerTest {
     public void shouldMakeFilePathAvailableWhenFileUploadIsComplete() throws Exception {
         String uid = String.valueOf(System.currentTimeMillis());
         String uploadContents = "This file should be available when upload is completed.";
-        setupMultiPartRequest(uid, uploadContents, uploadContents.length());
+        setupMultiPartRequest("somefile.txt", uid, uploadContents, uploadContents.length());
 
         uploadHandler.doPost(request, response);
         UploadProgress progress = InProgress.now(uid);
@@ -94,7 +94,7 @@ public class UploadHandlerTest {
         String uploadContents = generateStringWithSize(128);
         // content-length is set to a fraction of the size of the actual content,
         // so we are able to check for the progress in the test.
-        setupMultiPartRequest(uid, uploadContents, 1024);
+        setupMultiPartRequest("anything.txt", uid, uploadContents, 1024);
 
         uploadHandler.doPost(request, response);
         UploadProgress progress = InProgress.now(uid);
@@ -104,10 +104,34 @@ public class UploadHandlerTest {
     }
 
     @Test
+    public void shouldUseOriginalFilesExtensionInTheNewFileName() throws Exception {
+        String uid = String.valueOf(System.currentTimeMillis());
+        String uploadContents = "This file should be available when upload is completed.";
+        setupMultiPartRequest("my_awesome_set.mp3", uid, uploadContents, uploadContents.length());
+
+        uploadHandler.doPost(request, response);
+        UploadProgress progress = InProgress.now(uid);
+
+        assertTrue(progress.getFilePath().endsWith(uid + ".mp3"));
+    }
+
+    @Test
+    public void shouldNotIncludeExtensionInTheNewFileNameIfTheOriginalOneLacksExtension() throws Exception {
+        String uid = String.valueOf(System.currentTimeMillis());
+        String uploadContents = "This file should be available when upload is completed.";
+        setupMultiPartRequest("my_awesome_set_without_extension", uid, uploadContents, uploadContents.length());
+
+        uploadHandler.doPost(request, response);
+        UploadProgress progress = InProgress.now(uid);
+
+        assertTrue(progress.getFilePath().endsWith(uid));
+    }
+
+    @Test
     public void shouldRespond400AndNeverOpenUploadStreamIfUidIsNotPresentInMultipartRequest() throws Exception {
         String emptyUid = "";
         String ignoredUpload = "ignore me";
-        setupMultiPartRequest(emptyUid, ignoredUpload, ignoredUpload.length());
+        setupMultiPartRequest(null, emptyUid, ignoredUpload, ignoredUpload.length());
 
         uploadHandler.doPost(request, response);
 
@@ -115,7 +139,7 @@ public class UploadHandlerTest {
         verify(uploadStream, never()).openStream();
     }
 
-    private void setupMultiPartRequest(String uid, String uploadContents, int contentLength) throws Exception {
+    private void setupMultiPartRequest(String originalFileName, String uid, String uploadContents, int contentLength) throws Exception {
         FileItemStream uidStream = mock(FileItemStream.class);
         when(uidStream.isFormField()).thenReturn(true);
         when(uidStream.getFieldName()).thenReturn("uid");
@@ -123,6 +147,7 @@ public class UploadHandlerTest {
 
         uploadStream = mock(FileItemStream.class);
         when(uploadStream.isFormField()).thenReturn(false);
+        when(uploadStream.getName()).thenReturn(originalFileName);
         when(uploadStream.openStream()).thenReturn(stringToStream(uploadContents));
 
         FileItemIterator itemIterator = mock(FileItemIterator.class);
