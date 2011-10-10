@@ -37,6 +37,26 @@ public class UploadProgressTest {
     }
 
     @Test
+    public void shouldMakeFilePathAvailable() {
+        UploadProgress progress = new UploadProgress(2048L);
+        progress.complete("/files/completed_file.txt");
+        assertEquals("/files/completed_file.txt", progress.getFilePath());
+    }
+
+    @Test
+    public void shouldReturnJsonRepresentation() {
+        UploadProgress progress = new UploadProgress(2048L, 225L);
+        assertEquals("{\"completed\" : \"11\"}", progress.toJson());
+    }
+
+    @Test
+    public void shouldIncludeFilePathInJsonRepresentation() {
+        UploadProgress progress = new UploadProgress(2048L, 2048L);
+        progress.complete("/files/my_greatest_song.mp3");
+        assertEquals("{\"completed\" : \"100\", \"filePath\" : \"/files/my_greatest_song.mp3\"}", progress.toJson());
+    }
+
+    @Test
     public void defineEquals() {
         shouldReturnTrueForSameInstance();
         shouldReturnTrueForEqualValues();

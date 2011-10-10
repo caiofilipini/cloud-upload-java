@@ -32,7 +32,7 @@ public class StatusHandler extends HttpServlet {
 
     private String progressAsJson(String uid) {
         UploadProgress progress = InProgress.now(uid);
-        return "{\"completed\" : \"" + progress.calculatePercentage() + "\"}";
+        return progress.toJson();
     }
 
     private void respond404(HttpServletResponse response) throws IOException {

@@ -1,6 +1,9 @@
 package com.caiofilipini.upload;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -64,11 +67,24 @@ public class UploadHandlerTest {
     }
 
     @Test
+    public void shouldMakeFilePathAvailableWhenFileUploadIsComplete() throws Exception {
+        String uid = String.valueOf(System.currentTimeMillis());
+        String uploadContents = "This file should be available when upload is completed.";
+        setupMultiPartRequest(uid, uploadContents, uploadContents.length());
+
+        uploadHandler.doPost(request, response);
+        UploadProgress progress = InProgress.now(uid);
+
+        assertNotNull(progress.getFilePath());
+        assertTrue(progress.getFilePath().contains(uid));
+    }
+
+    @Test
     public void shouldUpdateProgressAsChunksAreWrittenToFile() throws Exception {
         String uid = String.valueOf(System.currentTimeMillis());
         String uploadContents = generateStringWithSize(128);
         // content-length is set to a fraction of the size of the actual content,
-        // so we are able to check for the progress.
+        // so we are able to check for the progress in the test.
         setupMultiPartRequest(uid, uploadContents, 1024);
 
         uploadHandler.doPost(request, response);

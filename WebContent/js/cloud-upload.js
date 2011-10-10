@@ -10,6 +10,9 @@ var UserInterface = {
   },
   enableDetailsButton: function() {
     $("#saveDetails").removeAttr("disabled");
+  },
+  showFilePath: function(filePath) {
+    $("#filePath").html("<a href=\"" + filePath + "\">File available here.</a>");
   }
 };
 
@@ -29,14 +32,15 @@ var Uploader = {
       $.ajax ({
         url: Uploader.statusUrl(),
         data: { "uid": Uploader.uploadId() },
-        success: function(percentage) {
-          percentage = percentage.completed;
+        success: function(status) {
+          percentage = status.completed;
 
           ui.updateStatusTo(percentage);
           completed = percentage >= 100;
 
           if (completed) {
             clearTimeout(refreshTimeout);
+            ui.showFilePath(status.filePath);
             ui.enableDetailsButton();
           }
         },

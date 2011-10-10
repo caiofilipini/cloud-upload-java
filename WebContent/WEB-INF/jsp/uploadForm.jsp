@@ -16,7 +16,7 @@
       </div>
 
       <div id="progress" style="visibility: hidden;">
-        Uploaded: <span id="status">0%</span>
+        Uploaded: <span id="status">0%</span>. <span id="filePath"></span>
       </div>
 
       <div id="dataInput">

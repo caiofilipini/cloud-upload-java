@@ -109,6 +109,7 @@ public class UploadHandler extends HttpServlet {
             }
         }
 
+        progress.complete(newFileName);
         long end = System.currentTimeMillis();
         System.out.println("Finished writing " + newFileName + " in " + (end - start) + "ms.");
     }

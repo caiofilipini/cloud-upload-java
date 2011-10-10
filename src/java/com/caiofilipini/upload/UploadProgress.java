@@ -3,6 +3,7 @@ package com.caiofilipini.upload;
 public class UploadProgress {
 
     private final Long total;
+    private String filePath;
     private Long completed;
 
     public UploadProgress(Long total, Long completed) {
@@ -20,6 +21,14 @@ public class UploadProgress {
 
     public Integer calculatePercentage() {
         return (int) Math.round(completed.doubleValue() / total.doubleValue() * 100.0);
+    }
+
+    public void complete(String filePath) {
+        this.filePath = filePath;
+    }
+
+    public String getFilePath() {
+        return filePath;
     }
 
     @Override
@@ -44,6 +53,21 @@ public class UploadProgress {
         hash = hash * 31 + total.intValue();
         hash = hash * 37 + completed.intValue();
         return hash;
+    }
+
+    public String toJson() {
+        StringBuilder json = new StringBuilder("{\"completed\" : \"")
+                .append(calculatePercentage())
+                .append("\"");
+
+        if (filePath != null) {
+            json.append(", \"filePath\" : \"")
+                    .append(this.filePath)
+                    .append("\"");
+        }
+
+        json.append("}");
+        return json.toString();
     }
 
 }
