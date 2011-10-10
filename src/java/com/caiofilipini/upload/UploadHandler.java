@@ -24,6 +24,7 @@ public class UploadHandler extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
     private static final int CHUNK_SIZE = 512;
+    private static final String FILES_PATH = "/files";
     private ServletFileUpload fileUpload;
 
     public UploadHandler() {
@@ -61,8 +62,7 @@ public class UploadHandler extends HttpServlet {
                         return;
                     }
 
-                    String newFileName = "/tmp/" + uid;
-                    writeStreamToDisk(totalSize, item, uid, newFileName);
+                    writeStreamToDisk(totalSize, item, uid, request);
                 }
             }
         } catch (FileUploadException e) {
@@ -80,7 +80,7 @@ public class UploadHandler extends HttpServlet {
             int totalSize,
             FileItemStream stream,
             String uid,
-            String newFileName) throws IOException {
+            HttpServletRequest request) throws IOException {
 
         UploadProgress progress = new UploadProgress(Long.valueOf(totalSize));
         InProgress.store(uid, progress);
@@ -88,9 +88,12 @@ public class UploadHandler extends HttpServlet {
         FileOutputStream diskFile = null;
         InputStream uploadStream = null;
 
+        String newFilePath = FILES_PATH + File.separator + uid;
+        String webappDiskPath = request.getServletContext().getRealPath(".");
+
         long start = System.currentTimeMillis();
         try {
-            diskFile = new FileOutputStream(new File(newFileName));
+            diskFile = new FileOutputStream(new File(webappDiskPath + newFilePath));
             uploadStream = stream.openStream();
 
             byte[] chunk = new byte[CHUNK_SIZE];
@@ -109,9 +112,11 @@ public class UploadHandler extends HttpServlet {
             }
         }
 
-        progress.complete(newFileName);
+        String downloadPath = request.getContextPath() + newFilePath;
+        progress.complete(downloadPath);
+
         long end = System.currentTimeMillis();
-        System.out.println("Finished writing " + newFileName + " in " + (end - start) + "ms.");
+        System.out.println("Finished writing " + newFilePath + " in " + (end - start) + "ms.");
     }
 
     private ServletFileUpload getFileUpload() {
