@@ -20,7 +20,8 @@
       </div>
 
       <div id="dataInput">
-        <form id="detailsForm" action="#" method="post">
+        <form id="detailsForm" action="/details" method="post">
+          <input id="uid" type="hidden" name="uid" value="${uid}" />
           <textarea name="details"></textarea>
           <input id="saveDetails" type="submit" value="Save" disabled />
         </form>
