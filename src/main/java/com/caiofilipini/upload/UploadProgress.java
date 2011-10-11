@@ -17,6 +17,7 @@ public class UploadProgress {
 
     public void completedMore(Integer increment) {
         this.completed += increment;
+        System.out.println("Completed " + completed + " bytes out of " + total);
     }
 
     public Integer calculatePercentage() {
@@ -25,6 +26,7 @@ public class UploadProgress {
 
     public void complete(String filePath) {
         this.filePath = filePath;
+        System.out.println("Completed " + filePath);
     }
 
     public String getFilePath() {

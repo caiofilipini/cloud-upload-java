@@ -25,6 +25,7 @@ public class UploadStream {
         try {
             diskFile = new FileOutputStream(new File(basePath + newFilePath));
             uploadStream = stream.openStream();
+            System.out.println("Stream opened for " + newFilePath);
 
             byte[] chunk = new byte[CHUNK_SIZE];
             int numberOfBytesRead = 0;
@@ -33,6 +34,10 @@ public class UploadStream {
                 diskFile.write(chunk, 0, numberOfBytesRead);
                 progress.completedMore(numberOfBytesRead);
             }
+        } catch (Exception e) {
+            System.out.println("Error writing " + newFilePath);
+            e.printStackTrace(System.out);
+            throw e;
         } finally {
             if (uploadStream != null) {
                 uploadStream.close();
@@ -41,6 +46,6 @@ public class UploadStream {
                 diskFile.close();
             }
         }
-	}
+    }
 
 }
