@@ -26,7 +26,7 @@ public class UploadHandler extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private static final String FILES_PATH = "/files";
     private ServletFileUpload fileUpload;
-	private ServletContext servletContext;
+    private ServletContext servletContext;
 
     public UploadHandler() {
     }
@@ -92,10 +92,17 @@ public class UploadHandler extends HttpServlet {
         InProgress.store(uid, progress);
 
         String originalFileName = stream.getName();
+        System.out.println("Original file name: " + originalFileName);
+
         String newFilePath = newFileNameFor(uid, originalFileName);
+        System.out.println("New file path: " + newFilePath);
+
         String webappDiskPath = this.servletContext.getRealPath(".");
+        System.out.println("Webapp disk path: " + webappDiskPath);
 
         long start = System.currentTimeMillis();
+        System.out.println("Started writing " + newFilePath + "...");
+
         new UploadStream(stream, progress).copyToFile(webappDiskPath, newFilePath);
         long end = System.currentTimeMillis();
 
