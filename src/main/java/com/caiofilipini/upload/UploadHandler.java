@@ -38,6 +38,15 @@ public class UploadHandler extends HttpServlet {
     @Override
     public void init(ServletConfig config) throws ServletException {
         this.servletContext = config.getServletContext();
+
+        String path = this.servletContext.getRealPath(".") + FILES_PATH;
+        File filesPath = new File(path);
+
+        if (!filesPath.exists()) {
+            System.out.println("Creating directory " + path);
+            filesPath.mkdir();
+            System.out.println("Directory " + path + " successfully created.");
+        }
     }
 
     @Override

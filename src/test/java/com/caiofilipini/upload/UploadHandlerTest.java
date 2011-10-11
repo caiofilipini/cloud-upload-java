@@ -3,8 +3,7 @@ package com.caiofilipini.upload;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-
-import static org.mockito.Mockito.anyString;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -12,7 +11,6 @@ import static org.mockito.Mockito.when;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.FileReader;
 
 import javax.servlet.ServletConfig;
@@ -24,7 +22,6 @@ import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class UploadHandlerTest {
@@ -34,11 +31,6 @@ public class UploadHandlerTest {
     private HttpServletResponse response;
     private UploadHandler uploadHandler;
     private FileItemStream uploadStream;
-
-    @BeforeClass
-    public static void createTempFilesPath() {
-        new File("/tmp/files").mkdir();
-    }
 
     @Before
     public void createSubject() throws Exception {
