@@ -34,7 +34,7 @@ public class UploadStream {
                 diskFile.write(chunk, 0, numberOfBytesRead);
                 progress.completedMore(numberOfBytesRead);
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
             System.out.println("Error writing " + newFilePath);
             e.printStackTrace(System.out);
             throw e;
