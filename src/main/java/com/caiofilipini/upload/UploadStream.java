@@ -6,10 +6,13 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.commons.fileupload.FileItemStream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class UploadStream {
 
     private static final int CHUNK_SIZE = 512;
+    private static Logger log = LoggerFactory.getLogger(UploadStream.class);
     private final FileItemStream stream;
     private final UploadProgress progress;
 
@@ -25,7 +28,7 @@ public class UploadStream {
         try {
             uploadStream = stream.openStream();
             diskFile = new FileOutputStream(new File(basePath + newFilePath));
-            System.out.println("Upload stream opened for " + newFilePath);
+            log.debug("Upload stream opened for {}", newFilePath);
 
             byte[] chunk = new byte[CHUNK_SIZE];
             int numberOfBytesRead = 0;
@@ -35,8 +38,7 @@ public class UploadStream {
                 progress.completedMore(numberOfBytesRead);
             }
         } catch (IOException e) {
-            System.out.println("Error writing " + newFilePath);
-            e.printStackTrace(System.out);
+            log.error("Error writing {}", newFilePath, e);
             throw e;
         } finally {
             if (diskFile != null) {
@@ -44,7 +46,7 @@ public class UploadStream {
             }
             if (uploadStream != null) {
                 uploadStream.close();
-                System.out.println("Uplaod stream closed for" + newFilePath);
+                log.debug("Upload stream closed for {}", newFilePath);
             }
         }
     }

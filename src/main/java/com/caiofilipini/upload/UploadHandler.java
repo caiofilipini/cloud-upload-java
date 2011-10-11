@@ -20,11 +20,15 @@ import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.util.Streams;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class UploadHandler extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
     private static final String FILES_PATH = "/files";
+    private static Logger log = LoggerFactory.getLogger(UploadHandler.class);
+
     private ServletFileUpload fileUpload;
     private ServletContext servletContext;
 
@@ -43,9 +47,11 @@ public class UploadHandler extends HttpServlet {
         File filesPath = new File(path);
 
         if (!filesPath.exists()) {
-            System.out.println("Creating directory " + path);
+            log.info("Creating directory {}", path);
+
             filesPath.mkdir();
-            System.out.println("Directory " + path + " successfully created.");
+
+            log.info("Directory {} successfully created.", path);
         }
     }
 
@@ -53,7 +59,7 @@ public class UploadHandler extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         int totalSize = request.getContentLength();
-        System.out.println("Received " + totalSize + " bytes in POST.");
+        log.info("Received {} bytes through POST.", totalSize);
 
         Map<String, String> params = new HashMap<String, String>();
 
@@ -101,24 +107,19 @@ public class UploadHandler extends HttpServlet {
         InProgress.store(uid, progress);
 
         String originalFileName = stream.getName();
-        System.out.println("Original file name: " + originalFileName);
-
         String newFilePath = newFileNameFor(uid, originalFileName);
-        System.out.println("New file path: " + newFilePath);
-
         String webappDiskPath = this.servletContext.getRealPath(".");
-        System.out.println("Webapp disk path: " + webappDiskPath);
 
         long start = System.currentTimeMillis();
-        System.out.println("Started writing " + newFilePath + "...");
+        log.info("Started writing {}", newFilePath);
 
         new UploadStream(stream, progress).copyToFile(webappDiskPath, newFilePath);
-        long end = System.currentTimeMillis();
 
         String downloadablePath = request.getContextPath() + newFilePath;
         progress.complete(downloadablePath);
 
-        System.out.println("Finished writing " + newFilePath + " in " + (end - start) + "ms.");
+        long end = System.currentTimeMillis();
+        log.info("Finished writing {} in {} ms.", newFilePath, (end - start));
     }
 
     private String newFileNameFor(String uid, String originalFileName) {
