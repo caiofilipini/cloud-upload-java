@@ -56,7 +56,7 @@ var Uploader = {
           console.log("Checking upload progress...");
           refreshProgress();
           checkProgress();
-        }, 500);
+        }, 1000);
       }
     };
 
