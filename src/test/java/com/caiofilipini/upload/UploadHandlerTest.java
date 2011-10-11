@@ -15,6 +15,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileReader;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -40,9 +41,18 @@ public class UploadHandlerTest {
     }
 
     @Before
-    public void createSubject() {
+    public void createSubject() throws Exception {
+        ServletContext servletContext = mock(ServletContext.class);
+
+        when(servletContext.getRealPath(anyString())).thenReturn("/tmp");
+
+        ServletConfig config = mock(ServletConfig.class);
+        when(config.getServletContext()).thenReturn(servletContext);
+
         fileUpload = mock(ServletFileUpload.class);
+
         uploadHandler = new UploadHandler(fileUpload);
+        uploadHandler.init(config);
     }
 
     @Before
@@ -155,11 +165,7 @@ public class UploadHandlerTest {
         when(itemIterator.next()).thenReturn(uidStream, uploadStream);
         when(fileUpload.getItemIterator(request)).thenReturn(itemIterator);
 
-        ServletContext servletContext = mock(ServletContext.class);
-        when(servletContext.getContextPath()).thenReturn("/");
-        when(servletContext.getRealPath(anyString())).thenReturn("/tmp");
-
-        when(request.getServletContext()).thenReturn(servletContext);
+        when(request.getContextPath()).thenReturn("/");
         when(request.getContentLength()).thenReturn(contentLength);
     }
 

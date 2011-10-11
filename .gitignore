@@ -1,1 +1,5 @@
-WebContent/WEB-INF/classes/*
+target
+src/main/webapp/WEB-INF/classes/*
+.classpath
+.project
+.settings

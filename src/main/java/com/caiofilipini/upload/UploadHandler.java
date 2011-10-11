@@ -7,8 +7,10 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
+//import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,19 +21,23 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.util.Streams;
 
-@WebServlet(name="UploadHandler", urlPatterns="/upload")
 public class UploadHandler extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
-
     private static final String FILES_PATH = "/files";
     private ServletFileUpload fileUpload;
+	private ServletContext servletContext;
 
     public UploadHandler() {
     }
 
     UploadHandler(ServletFileUpload fileUpload) {
         this.fileUpload = fileUpload;
+    }
+
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        this.servletContext = config.getServletContext();
     }
 
     @Override
@@ -87,7 +93,7 @@ public class UploadHandler extends HttpServlet {
 
         String originalFileName = stream.getName();
         String newFilePath = newFileNameFor(uid, originalFileName);
-        String webappDiskPath = request.getServletContext().getRealPath(".");
+        String webappDiskPath = this.servletContext.getRealPath(".");
 
         long start = System.currentTimeMillis();
         new UploadStream(stream, progress).copyToFile(webappDiskPath, newFilePath);
@@ -99,9 +105,9 @@ public class UploadHandler extends HttpServlet {
         System.out.println("Finished writing " + newFilePath + " in " + (end - start) + "ms.");
     }
 
-	private String newFileNameFor(String uid, String originalFileName) {
+    private String newFileNameFor(String uid, String originalFileName) {
         return FILES_PATH + File.separator + uid + extractExtensionFrom(originalFileName);
-	}
+    }
 
     private String extractExtensionFrom(String name) {
         Pattern fileExtensionRegex = Pattern.compile("(\\.\\w+)$");
@@ -113,9 +119,9 @@ public class UploadHandler extends HttpServlet {
         }
 
         return extension;
-	}
+    }
 
-	private ServletFileUpload getFileUpload() {
+    private ServletFileUpload getFileUpload() {
         return this.fileUpload != null ? this.fileUpload : new ServletFileUpload();
     }
 
