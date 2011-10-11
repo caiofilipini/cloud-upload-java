@@ -1,9 +1,7 @@
 package com.caiofilipini.upload;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -25,7 +23,7 @@ import org.apache.commons.fileupload.util.Streams;
 public class UploadHandler extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
-    private static final int CHUNK_SIZE = 512;
+
     private static final String FILES_PATH = "/files";
     private ServletFileUpload fileUpload;
 
@@ -87,40 +85,23 @@ public class UploadHandler extends HttpServlet {
         UploadProgress progress = new UploadProgress(Long.valueOf(totalSize));
         InProgress.store(uid, progress);
 
-        FileOutputStream diskFile = null;
-        InputStream uploadStream = null;
-
-        String extension = extractExtensionFrom(stream.getName());
-        String newFilePath = FILES_PATH + File.separator + uid + extension;
+        String originalFileName = stream.getName();
+        String newFilePath = newFileNameFor(uid, originalFileName);
         String webappDiskPath = request.getServletContext().getRealPath(".");
 
         long start = System.currentTimeMillis();
-        try {
-            diskFile = new FileOutputStream(new File(webappDiskPath + newFilePath));
-            uploadStream = stream.openStream();
-
-            byte[] chunk = new byte[CHUNK_SIZE];
-            int numberOfBytesRead = 0;
-
-            while ((numberOfBytesRead = uploadStream.read(chunk)) != -1) {
-                diskFile.write(chunk, 0, numberOfBytesRead);
-                progress.completedMore(numberOfBytesRead);
-            }
-        } finally {
-            if (uploadStream != null) {
-                uploadStream.close();
-            }
-            if (diskFile != null) {
-                diskFile.close();
-            }
-        }
-
-        String downloadPath = request.getContextPath() + newFilePath;
-        progress.complete(downloadPath);
-
+        new UploadStream(stream, progress).copyToFile(webappDiskPath, newFilePath);
         long end = System.currentTimeMillis();
+
+        String downloadablePath = request.getContextPath() + newFilePath;
+        progress.complete(downloadablePath);
+
         System.out.println("Finished writing " + newFilePath + " in " + (end - start) + "ms.");
     }
+
+	private String newFileNameFor(String uid, String originalFileName) {
+        return FILES_PATH + File.separator + uid + extractExtensionFrom(originalFileName);
+	}
 
     private String extractExtensionFrom(String name) {
         Pattern fileExtensionRegex = Pattern.compile("(\\.\\w+)$");
