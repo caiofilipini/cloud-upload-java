@@ -23,9 +23,9 @@ public class UploadStream {
         InputStream uploadStream = null;
         
         try {
-            diskFile = new FileOutputStream(new File(basePath + newFilePath));
             uploadStream = stream.openStream();
-            System.out.println("Stream opened for " + newFilePath);
+            diskFile = new FileOutputStream(new File(basePath + newFilePath));
+            System.out.println("Upload stream opened for " + newFilePath);
 
             byte[] chunk = new byte[CHUNK_SIZE];
             int numberOfBytesRead = 0;
@@ -39,11 +39,12 @@ public class UploadStream {
             e.printStackTrace(System.out);
             throw e;
         } finally {
-            if (uploadStream != null) {
-                uploadStream.close();
-            }
             if (diskFile != null) {
                 diskFile.close();
+            }
+            if (uploadStream != null) {
+                uploadStream.close();
+                System.out.println("Uplaod stream closed for" + newFilePath);
             }
         }
     }
