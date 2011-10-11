@@ -21,7 +21,7 @@ var Uploader = {
     return $("#uid").val();
   },
   statusUrl: function () {
-    return "/cloud-upload-java/status";
+    return "/status";
   },
   performUpload: function() {
     var ui = UserInterface;
