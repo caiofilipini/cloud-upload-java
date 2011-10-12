@@ -33,33 +33,30 @@ public class DetailsHandlerTest {
 
     @Test
     public void shouldMakeFilePathAndDetailsAvailableForRendering() throws Exception {
-    	String uid = "29";
-    	UploadProgress progress = new UploadProgress(29L, 29L);
-    	progress.complete("/files/29.mp3");
-    	InProgress.store(uid, progress);
+        setupPostRequest("29", "Everyone has sounds to share.");
 
-    	when(request.getParameter("uid")).thenReturn(uid);
-    	when(request.getParameter("details")).thenReturn("Everyone has sounds to share.");
+        detailsHandler.doPost(request, response);
 
-    	detailsHandler.doPost(request, response);
-
-    	verify(request).setAttribute("filePath", "/files/29.mp3");
-    	verify(request).setAttribute("details", "Everyone has sounds to share.");
+        verify(request).setAttribute("filePath", "/files/29.mp3");
+        verify(request).setAttribute("details", "Everyone has sounds to share.");
     }
 
     @Test
     public void shouldRedirectToDetailsPage() throws Exception {
-    	String uid = "57";
-    	UploadProgress progress = new UploadProgress(57L, 57L);
-    	progress.complete("/files/57.mp3");
-    	InProgress.store(uid, progress);
+        setupPostRequest("57", "Everyone has sounds to share.");
 
-    	when(request.getParameter("uid")).thenReturn(uid);
-    	when(request.getParameter("details")).thenReturn("Everyone has sounds to share.");
+        detailsHandler.doPost(request, response);
 
-    	detailsHandler.doPost(request, response);
+        verify(request).getRequestDispatcher("/WEB-INF/jsp/details.jsp");
+    }
 
-    	verify(request).getRequestDispatcher("/WEB-INF/jsp/details.jsp");
+    private void setupPostRequest(String uid, String details) {
+        when(request.getParameter("uid")).thenReturn(uid);
+        when(request.getParameter("details")).thenReturn(details);
+
+        UploadProgress progress = new UploadProgress(42L, 42L);
+        progress.complete("/files/" + uid + ".mp3");
+        InProgress.store(uid, progress);
     }
 
 }
