@@ -5,7 +5,7 @@
     <title>Cloud Upload</title>
   </head>
   <body>
-    <h1>Upload your music!</h1>
+    <h2>Upload your music!</h2>
     <div id="main">
       <div id="fileSelection">
         <form id="uploadForm" action="${pageContext.request.contextPath}/upload" target="uploadContainer" method="post" enctype="multipart/form-data">
@@ -26,7 +26,7 @@
       </div>
 
       <div id="dataInput">
-        <form id="detailsForm" action="/details" method="post" accept-charset="UTF-8">
+        <form id="detailsForm" action="${pageContext.request.contextPath}/details" method="post" accept-charset="UTF-8">
           <input id="uid" type="hidden" name="uid" value="${uid}" />
           <textarea name="details"></textarea>
           <input id="saveDetails" type="submit" value="Save" disabled />
