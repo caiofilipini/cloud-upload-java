@@ -36,7 +36,13 @@ var Uploader = {
           percentage = status.completed;
 
           ui.updateStatusTo(percentage);
+
+          console.log(status);
+          console.log(status.filePath);
+          console.log(status.percentage);
+
           completed = percentage >= 100;
+          console.log(completed);
 
           if (completed) {
             clearTimeout(refreshTimeout);
