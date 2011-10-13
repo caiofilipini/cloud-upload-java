@@ -18,6 +18,10 @@ public class InProgress {
         throw notFound(uid);
     }
 
+    public static void abort(String uid) {
+        IN_PROGRESS.remove(uid);
+    }
+
     private static UploadProgress get(String uid) {
         UploadProgress progress = IN_PROGRESS.get(uid);
         if (progress == null) {

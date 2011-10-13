@@ -12,6 +12,7 @@ import static org.mockito.Mockito.when;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.FileReader;
+import java.io.IOException;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -55,7 +56,7 @@ public class UploadHandlerTest {
 
     @Test
     public void shouldReadUploadedFileFromMultipartRequestAndWriteNewFileToDisk() throws Exception {
-        String uid = String.valueOf(System.currentTimeMillis());
+        String uid = newUid();
         String uploadContents = "SOMERANDOMFILECONTENT";
         setupMultiPartRequest("randomfile.txt", uid, uploadContents, uploadContents.length());
 
@@ -66,7 +67,7 @@ public class UploadHandlerTest {
 
     @Test
     public void shouldUpdateProgressTo100WhenFileUploadIsComplete() throws Exception {
-        String uid = String.valueOf(System.currentTimeMillis());
+        String uid = newUid();
         String uploadContents = "This file is really tiny, but it's ok.";
         setupMultiPartRequest("tinyfile.txt", uid, uploadContents, uploadContents.length());
 
@@ -79,7 +80,7 @@ public class UploadHandlerTest {
 
     @Test
     public void shouldMakeFilePathAvailableWhenFileUploadIsComplete() throws Exception {
-        String uid = String.valueOf(System.currentTimeMillis());
+        String uid = newUid();
         String uploadContents = "This file should be available when upload is completed.";
         setupMultiPartRequest("somefile.txt", uid, uploadContents, uploadContents.length());
 
@@ -92,7 +93,7 @@ public class UploadHandlerTest {
 
     @Test
     public void shouldUpdateProgressAsChunksAreWrittenToFile() throws Exception {
-        String uid = String.valueOf(System.currentTimeMillis());
+        String uid = newUid();
         String uploadContents = generateStringWithSize(128);
         // content-length is set to a fraction of the size of the actual content,
         // so we are able to check for the progress in the test.
@@ -107,7 +108,7 @@ public class UploadHandlerTest {
 
     @Test
     public void shouldUseOriginalFilesExtensionInTheNewFileName() throws Exception {
-        String uid = String.valueOf(System.currentTimeMillis());
+        String uid = newUid();
         String uploadContents = "This file should be available when upload is completed.";
         setupMultiPartRequest("my_awesome_set.mp3", uid, uploadContents, uploadContents.length());
 
@@ -119,7 +120,7 @@ public class UploadHandlerTest {
 
     @Test
     public void shouldNotIncludeExtensionInTheNewFileNameIfTheOriginalOneLacksExtension() throws Exception {
-        String uid = String.valueOf(System.currentTimeMillis());
+        String uid = newUid();
         String uploadContents = "This file should be available when upload is completed.";
         setupMultiPartRequest("my_awesome_set_without_extension", uid, uploadContents, uploadContents.length());
 
@@ -139,6 +140,26 @@ public class UploadHandlerTest {
 
         verify(response).sendError(400);
         verify(uploadStream, never()).openStream();
+    }
+
+    @Test(expected = ProgressNotFoundException.class)
+    public void shouldRemoveProgressAndRespond500IfCannotWriteFile() throws Exception {
+        String uid = newUid();
+        String uploadContents = "This file will never be written to disk.";
+        setupMultiPartRequest("error.txt", uid, uploadContents, uploadContents.length());
+        // simulating an IOException
+        when(uploadStream.openStream()).thenThrow(new IOException());
+
+        uploadHandler.doPost(request, response);
+
+        verify(response).sendError(500);
+        verify(response, never()).setStatus(200);
+        // this should throw a ProgressNotFoundException
+        InProgress.now(uid);
+    }
+
+    private String newUid() {
+        return String.valueOf(System.currentTimeMillis());
     }
 
     private void setupMultiPartRequest(String originalFileName, String uid, String uploadContents, int contentLength) throws Exception {

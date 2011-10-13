@@ -83,7 +83,16 @@ public class UploadHandler extends HttpServlet {
                         return;
                     }
 
-                    writeStreamToDisk(totalSize, item, uid, request);
+                    try {
+                        writeStreamToDisk(totalSize, item, uid, request);
+                    } catch (IOException e) {
+                        log.error("An error occurred while handling upload id {}", uid);
+
+                        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                        InProgress.abort(uid);
+
+                        return;
+                    }
                 }
             }
         } catch (FileUploadException e) {

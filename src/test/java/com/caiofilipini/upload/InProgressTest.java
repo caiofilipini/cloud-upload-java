@@ -15,6 +15,18 @@ public class InProgressTest {
     }
 
     @Test(expected = ProgressNotFoundException.class)
+    public void shouldAbortProgress() {
+        String uid = String.valueOf(System.currentTimeMillis());
+        UploadProgress progress = new UploadProgress(1024L);
+        InProgress.store(uid, progress);
+
+        InProgress.abort(uid);
+
+        // expect this to throw a ProgressNotFoundException after aborting.
+        InProgress.now(uid);
+    }
+
+    @Test(expected = ProgressNotFoundException.class)
     public void shouldThrowExceptionWhenNoProgressIsFoundForUid() {
         InProgress.now("42");
     }
