@@ -16,6 +16,11 @@
         <iframe id="uploadContainer" name="uploadContainer" style="display: none; visibility: hidden; border: 0;"></iframe>
       </div>
 
+      <div id="errorBox" style="display: none;">
+        An error ocurred while uploading your file. We're very sorry about that.<br />
+        Please try again soon!
+      </div>
+
       <div id="progress" style="visibility: hidden;">
         Uploaded: <span id="status">0%</span>. <span id="filePath"></span>
       </div>

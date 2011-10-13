@@ -5,6 +5,9 @@ var UserInterface = {
   showStatusBar: function() {
     $("#progress").css("visibility", "visible");
   },
+  hideStatusBar: function() {
+    $("#progress").css("visibility", "hidden");
+  },
   updateStatusTo: function(percentage) {
     $("#status").html(percentage + "%");
   },
@@ -13,6 +16,9 @@ var UserInterface = {
   },
   showFilePath: function(filePath) {
     $("#filePath").html("<a href=\"" + filePath + "\">File available here.</a>");
+  },
+  showErrorBox: function() {
+    $("#errorBox").show();
   }
 };
 
@@ -32,6 +38,10 @@ var Uploader = {
       return status.completed >= 100 && status.filePath != undefined;
     };
 
+    var cancelTimeout = function() {
+      clearTimeout(refreshTimeout);
+    };
+
     var refreshProgress = function() {
       $.ajax ({
         url: Uploader.statusUrl(),
@@ -43,13 +53,15 @@ var Uploader = {
           completed = isCompleted(status);
 
           if (completed) {
-            clearTimeout(refreshTimeout);
+            cancelTimeout();
             ui.showFilePath(status.filePath);
             ui.enableDetailsButton();
           }
         },
-        error: function(ignore, message) {
-          console.log("Error while requesting status: " + message);
+        error: function(xhr, message) {
+          cancelTimeout();
+          ui.hideStatusBar();
+          ui.showErrorBox();
         }
       });    
     }; 
