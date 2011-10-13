@@ -1,3 +1,4 @@
+<%@ page contentType="text/html; charset=UTF-8" %>
 <!DOCTYPE html>
 <html>
   <head>
@@ -20,7 +21,7 @@
       </div>
 
       <div id="dataInput">
-        <form id="detailsForm" action="/details" method="post">
+        <form id="detailsForm" action="/details" method="post" accept-charset="UTF-8">
           <input id="uid" type="hidden" name="uid" value="${uid}" />
           <textarea name="details"></textarea>
           <input id="saveDetails" type="submit" value="Save" disabled />
