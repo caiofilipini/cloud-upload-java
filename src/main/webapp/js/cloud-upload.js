@@ -28,6 +28,10 @@ var Uploader = {
     var completed = false;
     var refreshTimeout;
 
+    var isCompleted = function(status) {
+      return status.completed >= 100 && status.filePath != undefined;
+    };
+
     var refreshProgress = function() {
       $.ajax ({
         url: Uploader.statusUrl(),
@@ -36,13 +40,7 @@ var Uploader = {
           percentage = status.completed;
 
           ui.updateStatusTo(percentage);
-
-          console.log(status);
-          console.log(status.filePath);
-          console.log(status.percentage);
-
-          completed = percentage >= 100;
-          console.log(completed);
+          completed = isCompleted(status);
 
           if (completed) {
             clearTimeout(refreshTimeout);
@@ -59,7 +57,6 @@ var Uploader = {
     var checkProgress = function() {
       if (!completed) {    
         refreshTimeout = setTimeout(function() {
-          console.log("Checking upload progress...");
           refreshProgress();
           checkProgress();
         }, 1000);
