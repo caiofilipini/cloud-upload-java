@@ -1,4 +1,4 @@
-package com.caiofilipini.upload;
+package com.caiofilipini.upload.handler;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -24,6 +24,11 @@ import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.junit.Before;
 import org.junit.Test;
+
+import com.caiofilipini.upload.handler.UploadHandler;
+import com.caiofilipini.upload.progress.InProgress;
+import com.caiofilipini.upload.progress.ProgressNotFoundException;
+import com.caiofilipini.upload.progress.UploadProgress;
 
 public class UploadHandlerTest {
 

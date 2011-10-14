@@ -1,4 +1,4 @@
-package com.caiofilipini.upload;
+package com.caiofilipini.upload.stream;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -8,6 +8,8 @@ import java.io.InputStream;
 import org.apache.commons.fileupload.FileItemStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.caiofilipini.upload.progress.UploadProgress;
 
 public class UploadStream {
 

@@ -4,22 +4,22 @@
 
   <servlet>
     <servlet-name>FormHandler</servlet-name>
-    <servlet-class>com.caiofilipini.upload.FormHandler</servlet-class>
+    <servlet-class>com.caiofilipini.upload.handler.FormHandler</servlet-class>
   </servlet>
 
   <servlet>
     <servlet-name>StatusHandler</servlet-name>
-    <servlet-class>com.caiofilipini.upload.StatusHandler</servlet-class>
+    <servlet-class>com.caiofilipini.upload.handler.StatusHandler</servlet-class>
   </servlet>
 
   <servlet>
     <servlet-name>UploadHandler</servlet-name>
-    <servlet-class>com.caiofilipini.upload.UploadHandler</servlet-class>
+    <servlet-class>com.caiofilipini.upload.handler.UploadHandler</servlet-class>
   </servlet>
 
   <servlet>
     <servlet-name>DetailsHandler</servlet-name>
-    <servlet-class>com.caiofilipini.upload.DetailsHandler</servlet-class>
+    <servlet-class>com.caiofilipini.upload.handler.DetailsHandler</servlet-class>
   </servlet>
 
   <servlet-mapping>

@@ -1,4 +1,4 @@
-package com.caiofilipini.upload;
+package com.caiofilipini.upload.handler;
 
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
@@ -13,6 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import com.caiofilipini.upload.handler.FormHandler;
 
 public class FormHandlerTest {
 

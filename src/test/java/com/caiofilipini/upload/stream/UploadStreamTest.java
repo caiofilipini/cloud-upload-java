@@ -1,4 +1,4 @@
-package com.caiofilipini.upload;
+package com.caiofilipini.upload.stream;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -11,6 +11,10 @@ import java.io.IOException;
 
 import org.apache.commons.fileupload.FileItemStream;
 import org.junit.Test;
+
+import com.caiofilipini.upload.progress.InProgress;
+import com.caiofilipini.upload.progress.UploadProgress;
+import com.caiofilipini.upload.stream.UploadStream;
 
 public class UploadStreamTest {
 

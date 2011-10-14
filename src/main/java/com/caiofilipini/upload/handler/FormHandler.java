@@ -1,4 +1,4 @@
-package com.caiofilipini.upload;
+package com.caiofilipini.upload.handler;
 
 import java.io.IOException;
 

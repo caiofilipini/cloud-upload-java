@@ -1,4 +1,4 @@
-package com.caiofilipini.upload;
+package com.caiofilipini.upload.handler;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -14,6 +14,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+
+import com.caiofilipini.upload.handler.StatusHandler;
+import com.caiofilipini.upload.progress.InProgress;
+import com.caiofilipini.upload.progress.UploadProgress;
 
 public class StatusHandlerTest {
 

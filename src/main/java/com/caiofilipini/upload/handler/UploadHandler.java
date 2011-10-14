@@ -1,4 +1,4 @@
-package com.caiofilipini.upload;
+package com.caiofilipini.upload.handler;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,6 +22,10 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.util.Streams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.caiofilipini.upload.progress.InProgress;
+import com.caiofilipini.upload.progress.UploadProgress;
+import com.caiofilipini.upload.stream.UploadStream;
 
 public class UploadHandler extends HttpServlet {
 

@@ -1,6 +1,9 @@
-package com.caiofilipini.upload;
+package com.caiofilipini.upload.progress;
 
 import org.junit.Test;
+
+import com.caiofilipini.upload.progress.UploadProgress;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 

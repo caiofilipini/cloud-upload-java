@@ -1,4 +1,4 @@
-package com.caiofilipini.upload;
+package com.caiofilipini.upload.progress;
 
 import java.util.HashMap;
 import java.util.Map;
