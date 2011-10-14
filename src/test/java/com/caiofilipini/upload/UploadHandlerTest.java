@@ -32,6 +32,7 @@ public class UploadHandlerTest {
     private HttpServletResponse response;
     private UploadHandler uploadHandler;
     private FileItemStream uploadStream;
+    private String uid;
 
     @Before
     public void createSubject() throws Exception {
@@ -46,6 +47,8 @@ public class UploadHandlerTest {
 
         uploadHandler = new UploadHandler(fileUpload);
         uploadHandler.init(config);
+
+        uid = newUid();
     }
 
     @Before
@@ -56,7 +59,6 @@ public class UploadHandlerTest {
 
     @Test
     public void shouldReadUploadedFileFromMultipartRequestAndWriteNewFileToDisk() throws Exception {
-        String uid = newUid();
         String uploadContents = "SOMERANDOMFILECONTENT";
         setupMultiPartRequest("randomfile.txt", uid, uploadContents, uploadContents.length());
 
@@ -66,21 +68,7 @@ public class UploadHandlerTest {
     }
 
     @Test
-    public void shouldUpdateProgressTo100WhenFileUploadIsComplete() throws Exception {
-        String uid = newUid();
-        String uploadContents = "This file is really tiny, but it's ok.";
-        setupMultiPartRequest("tinyfile.txt", uid, uploadContents, uploadContents.length());
-
-        uploadHandler.doPost(request, response);
-        UploadProgress progress = InProgress.now(uid);
-
-        Integer expectedPercentage = 100;
-        assertEquals(expectedPercentage, progress.calculatePercentage());
-    }
-
-    @Test
     public void shouldMakeFilePathAvailableWhenFileUploadIsComplete() throws Exception {
-        String uid = newUid();
         String uploadContents = "This file should be available when upload is completed.";
         setupMultiPartRequest("somefile.txt", uid, uploadContents, uploadContents.length());
 
@@ -92,23 +80,7 @@ public class UploadHandlerTest {
     }
 
     @Test
-    public void shouldUpdateProgressAsChunksAreWrittenToFile() throws Exception {
-        String uid = newUid();
-        String uploadContents = generateStringWithSize(128);
-        // content-length is set to a fraction of the size of the actual content,
-        // so we are able to check for the progress in the test.
-        setupMultiPartRequest("anything.txt", uid, uploadContents, 1024);
-
-        uploadHandler.doPost(request, response);
-        UploadProgress progress = InProgress.now(uid);
-
-        Integer expectedPercentage = 13;
-        assertEquals(expectedPercentage, progress.calculatePercentage());
-    }
-
-    @Test
     public void shouldUseOriginalFilesExtensionInTheNewFileName() throws Exception {
-        String uid = newUid();
         String uploadContents = "This file should be available when upload is completed.";
         setupMultiPartRequest("my_awesome_set.mp3", uid, uploadContents, uploadContents.length());
 
@@ -120,7 +92,6 @@ public class UploadHandlerTest {
 
     @Test
     public void shouldNotIncludeExtensionInTheNewFileNameIfTheOriginalOneLacksExtension() throws Exception {
-        String uid = newUid();
         String uploadContents = "This file should be available when upload is completed.";
         setupMultiPartRequest("my_awesome_set_without_extension", uid, uploadContents, uploadContents.length());
 
@@ -144,7 +115,6 @@ public class UploadHandlerTest {
 
     @Test(expected = ProgressNotFoundException.class)
     public void shouldRemoveProgressAndRespond500IfCannotWriteFile() throws Exception {
-        String uid = newUid();
         String uploadContents = "This file will never be written to disk.";
         setupMultiPartRequest("error.txt", uid, uploadContents, uploadContents.length());
         // simulating an IOException
@@ -180,15 +150,6 @@ public class UploadHandlerTest {
 
         when(request.getContextPath()).thenReturn("/");
         when(request.getContentLength()).thenReturn(contentLength);
-    }
-
-    private String generateStringWithSize(int stringSize) {
-        char c = '*';
-        StringBuilder s = new StringBuilder();
-        for (int i = 0; i < stringSize; i++) {
-            s.append(c);
-        }
-        return s.toString();
     }
 
     private ByteArrayInputStream stringToStream(String string) {
