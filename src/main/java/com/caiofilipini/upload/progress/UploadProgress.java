@@ -23,7 +23,7 @@ public class UploadProgress {
         return (int) Math.round(completed.doubleValue() / total.doubleValue() * 100.0);
     }
 
-    public void complete(String filePath) {
+    public void fileAvailableAt(String filePath) {
         this.filePath = filePath;
     }
 

@@ -59,7 +59,7 @@ public class DetailsHandlerTest {
         when(request.getParameter("details")).thenReturn(details);
 
         UploadProgress progress = new UploadProgress(42L, 42L);
-        progress.complete("/files/" + uid + ".mp3");
+        progress.fileAvailableAt("/files/" + uid + ".mp3");
         InProgress.store(uid, progress);
     }
 

@@ -133,7 +133,7 @@ public class UploadHandler extends HttpServlet {
         new UploadStream(multipartField, progress).copyToFile(webappDiskPath, newFilePath);
 
         String downloadablePath = request.getContextPath() + newFilePath;
-        progress.complete(downloadablePath);
+        progress.fileAvailableAt(downloadablePath);
 
         long end = System.currentTimeMillis();
         log.info("Finished writing {} in {} ms.", newFilePath, (end - start));
