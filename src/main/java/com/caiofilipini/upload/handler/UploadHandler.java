@@ -74,21 +74,21 @@ public class UploadHandler extends HttpServlet {
             itemIterator = fileUpload.getItemIterator(request);
 
             while (itemIterator.hasNext()) {
-                FileItemStream item = itemIterator.next();
+                FileItemStream multipartField = itemIterator.next();
 
-                if (item.isFormField()) {
-                    String fieldValue = Streams.asString(item.openStream());
-                    params.put(item.getFieldName(), fieldValue);
+                if (multipartField.isFormField()) {
+                    String fieldValue = Streams.asString(multipartField.openStream());
+                    params.put(multipartField.getFieldName(), fieldValue);
                 } else {
                     String uid = params.get("uid");
 
-                    if (uid == null || uid.isEmpty()) {
+                    if (isEmpty(uid)) {
                         respond400(response);
                         return;
                     }
 
                     try {
-                        writeStreamToDisk(totalSize, item, uid, request);
+                        writeStreamToDisk(totalSize, multipartField, uid, request);
                     } catch (IOException e) {
                         log.error("An error occurred while handling upload id {}", uid);
 
@@ -106,27 +106,31 @@ public class UploadHandler extends HttpServlet {
         response.setStatus(HttpServletResponse.SC_OK);
     }
 
+    private boolean isEmpty(String uid) {
+        return uid == null || uid.isEmpty();
+    }
+
     private void respond400(HttpServletResponse response) throws IOException {
         response.sendError(HttpServletResponse.SC_BAD_REQUEST);
     }
 
     private void writeStreamToDisk(
             int totalSize,
-            FileItemStream stream,
+            FileItemStream multipartField,
             String uid,
             HttpServletRequest request) throws IOException {
 
         UploadProgress progress = new UploadProgress(Long.valueOf(totalSize));
         InProgress.store(uid, progress);
 
-        String originalFileName = stream.getName();
+        String originalFileName = multipartField.getName();
         String newFilePath = newFileNameFor(uid, originalFileName);
         String webappDiskPath = this.servletContext.getRealPath(".");
 
         long start = System.currentTimeMillis();
         log.info("Started writing {}", newFilePath);
 
-        new UploadStream(stream, progress).copyToFile(webappDiskPath, newFilePath);
+        new UploadStream(multipartField, progress).copyToFile(webappDiskPath, newFilePath);
 
         String downloadablePath = request.getContextPath() + newFilePath;
         progress.complete(downloadablePath);
