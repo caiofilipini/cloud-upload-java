@@ -9,6 +9,9 @@ I first started coding Ruby for this challenge, and I've chosen Ruby because it'
 ### Rack Issues
 Handling file uploads and any multipart requests with Rack is simple. Rack has a built-in multipart request parser - which is great - but when a file is uploaded with multipart `POST`, there is no way of getting access to the payload stream. In other words, my application wasn't able to give proper upload feedback, because it only received `POST` data __after__ the file had been completely sent to the server.
 
+The unfinished Ruby version of this challenge is available at:
+https://github.com/caiofilipini/cloud-upload-ruby
+
 ## Switching to Java
 Ruby + Rack was a bad choice to solve this challenge, so I switched to Java.
 
