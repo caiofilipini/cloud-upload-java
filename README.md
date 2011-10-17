@@ -33,6 +33,7 @@ I didn't write any integration tests for this challenge, mostly because it is a 
 ## Notes and possible improvements
 
 ### General
+* I've done a lot of refactoring while coding, so some classes had pieces of code extracted to smaller classes with more clear responsibilities. A great example is `com.caiofilipini.upload.handler.UploadHandler` that was broken into `com.caiofilipini.upload.handler.multipart.MultipartRequestHandler` and `com.caiofilipini.upload.handler.multipart.FileHandler` as seen in [commit c6e18e5b91](https://github.com/caiofilipini/cloud-upload-java/commit/c6e18e5b91fe655329760079713b03290d49787d). But I thought that extracting test cases for those classes as well was unnecessary, since the original `UploadHandlerTest` has enough coverage for all classes and their interactions.
 * Progress for each upload is stored in a `Map`, and it would be far better to store them in Redis, Memcached or any other Key/Value store.
 * To be able to handle concurrent uploads, each upload needs an unique identifier, and currently a timestamp is being used, so using a better unique id generator would be a good idea.
 
