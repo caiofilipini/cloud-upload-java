@@ -40,7 +40,6 @@ public class FormHandlerTest {
         formHandler.doGet(request, response);
 
         verify(request).setAttribute(eq("uid"), isNotNull());
-        verify(response).setHeader("Content-Type", "text/html");
         verify(request).getRequestDispatcher("WEB-INF/jsp/uploadForm.jsp");
     }
 

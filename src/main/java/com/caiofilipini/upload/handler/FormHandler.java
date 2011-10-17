@@ -18,8 +18,6 @@ public class FormHandler extends HttpServlet {
         long uid = System.currentTimeMillis();
 
         request.setAttribute("uid", uid);
-        response.setHeader("Content-Type", "text/html");
-
         request.getRequestDispatcher("WEB-INF/jsp/uploadForm.jsp").forward(request, response);
     }
 
