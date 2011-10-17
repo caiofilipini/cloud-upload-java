@@ -24,6 +24,6 @@ public class DetailsHandler extends HttpServlet {
 
         request.getRequestDispatcher("/WEB-INF/jsp/details.jsp")
                 .forward(request, response);
-	}
+    }
 
 }

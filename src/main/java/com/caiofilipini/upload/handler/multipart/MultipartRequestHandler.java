@@ -17,9 +17,9 @@ public class MultipartRequestHandler {
 
     private final HttpServletRequest request;
     private final ServletFileUpload fileUpload;
-	private final Map<String, String> params;
+    private final Map<String, String> params;
 
-	public MultipartRequestHandler(HttpServletRequest request, ServletFileUpload fileUpload) {
+    public MultipartRequestHandler(HttpServletRequest request, ServletFileUpload fileUpload) {
         this.request = request;
         this.fileUpload = fileUpload;
         this.params = new HashMap<String, String>();
@@ -37,9 +37,9 @@ public class MultipartRequestHandler {
                 if (multipartField.isFormField()) {
                     extractParameter(multipartField, params);
                 } else {
-                	FileHandler fileHandler = new FileHandler(request, webappDiskPath, filesPath);
+                    FileHandler fileHandler = new FileHandler(request, webappDiskPath, filesPath);
                     statusCode = fileHandler.handle(multipartField, params.get("uid"));
-	            }
+                }
             }
         } catch (FileUploadException e) {
             throw new IOException(e);

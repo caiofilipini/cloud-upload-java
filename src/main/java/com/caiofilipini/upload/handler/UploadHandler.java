@@ -46,13 +46,8 @@ public class UploadHandler extends HttpServlet {
         String webappDiskPath = this.servletContext.getRealPath(".");
         MultipartRequestHandler multipartHandler = new MultipartRequestHandler(request, getFileUpload());
 
-		int responseStatus = multipartHandler.handleMultipartFields(webappDiskPath, FILES_PATH);
+        int responseStatus = multipartHandler.handleMultipartFields(webappDiskPath, FILES_PATH);
         response.setStatus(responseStatus);
-    }
-
-
-    private ServletFileUpload getFileUpload() {
-        return this.fileUpload != null ? this.fileUpload : new ServletFileUpload();
     }
 
     private void configureFilesPath() {
@@ -66,6 +61,10 @@ public class UploadHandler extends HttpServlet {
 
             log.info("Directory {} successfully created.", path);
         }
+    }
+
+    private ServletFileUpload getFileUpload() {
+        return this.fileUpload != null ? this.fileUpload : new ServletFileUpload();
     }
 
 }
