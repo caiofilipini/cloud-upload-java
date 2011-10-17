@@ -23,13 +23,13 @@ public class FileHandler {
     private final String webappDiskPath;
     private final String filesPath;
 
-	public FileHandler(HttpServletRequest request, String webappDiskPath, String filesPath) {
-		this.request = request;
-		this.webappDiskPath = webappDiskPath;
-		this.filesPath = filesPath;
+    public FileHandler(HttpServletRequest request, String webappDiskPath, String filesPath) {
+        this.request = request;
+        this.webappDiskPath = webappDiskPath;
+        this.filesPath = filesPath;
     }
-	
-	public int handle(FileItemStream uploadedFile, String uid) {
+
+    public int handle(FileItemStream uploadedFile, String uid) {
         if (isEmpty(uid)) {
             return HttpServletResponse.SC_BAD_REQUEST;
         }
