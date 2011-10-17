@@ -114,7 +114,7 @@ public class UploadHandlerTest {
 
         uploadHandler.doPost(request, response);
 
-        verify(response).sendError(400);
+        verify(response).setStatus(400);
         verify(uploadStream, never()).openStream();
     }
 
@@ -127,7 +127,7 @@ public class UploadHandlerTest {
 
         uploadHandler.doPost(request, response);
 
-        verify(response).sendError(500);
+        verify(response).setStatus(500);
         verify(response, never()).setStatus(200);
         // this should throw a ProgressNotFoundException
         InProgress.now(uid);
